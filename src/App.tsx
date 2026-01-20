@@ -301,7 +301,7 @@ function App() {
         </div>
       </main>
 
-      {/* FOOTER & SEO CONTENT (Trust Signals) */}
+     {/* FOOTER & SEO CONTENT (Trust Signals) */}
       <footer className="border-t border-white/5 bg-slate-900/50 py-12">
         <div className="max-w-4xl mx-auto px-6 grid md:grid-cols-3 gap-8 mb-12">
             <div className="space-y-2">
@@ -325,6 +325,7 @@ function App() {
              Strategic Finance by <a href="https://nurture.kiwi" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold">Nurture</a>.
            </span>
         </div>
+      </footer>
   );
 }
 
