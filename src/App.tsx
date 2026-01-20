@@ -317,8 +317,10 @@ function App() {
                 <p className="text-sm text-slate-400">Built by a Virtual CFO to help founders make better strategic decisions.</p>
             </div>
         </div>
-        <div className="text-center text-slate-600 text-xs uppercase tracking-widest">
-           &copy; {new Date().getFullYear()} YourBudget. Built by <a href="https://sheridanjamieson.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Sheridan Jamieson</a>.
+        
+        {/* UPDATED COPYRIGHT LINE: Links to Nurture */}
+        <div className="text-center text-slate-600 text-xs uppercase tracking-widest flex items-center justify-center gap-1">
+           &copy; {new Date().getFullYear()} YourBudget. Strategic Finance by <a href="https://nurture.kiwi" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold">Nurture</a>.
         </div>
       </footer>
     </div>
