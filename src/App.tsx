@@ -318,12 +318,13 @@ function App() {
             </div>
         </div>
         
-        {/* UPDATED COPYRIGHT LINE: Links to Nurture */}
-        <div className="text-center text-slate-600 text-xs uppercase tracking-widest flex items-center justify-center gap-1">
-           &copy; {new Date().getFullYear()} YourBudget. Strategic Finance by <a href="https://nurture.kiwi" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold">Nurture</a>.
+        {/* UPDATED COPYRIGHT LINE: Stacked on mobile, row on desktop */}
+        <div className="text-center text-slate-600 text-xs uppercase tracking-widest flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2">
+           <span>&copy; {new Date().getFullYear()} YourBudget.</span>
+           <span>
+             Strategic Finance by <a href="https://nurture.kiwi" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold">Nurture</a>.
+           </span>
         </div>
-      </footer>
-    </div>
   );
 }
 
