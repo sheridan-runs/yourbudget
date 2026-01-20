@@ -301,7 +301,7 @@ function App() {
         </div>
       </main>
 
-     {/* FOOTER & SEO CONTENT (Trust Signals) */}
+    {/* FOOTER & SEO CONTENT (Trust Signals) */}
       <footer className="border-t border-white/5 bg-slate-900/50 py-12">
         <div className="max-w-4xl mx-auto px-6 grid md:grid-cols-3 gap-8 mb-12">
             <div className="space-y-2">
@@ -318,7 +318,7 @@ function App() {
             </div>
         </div>
         
-        {/* UPDATED COPYRIGHT LINE: Stacked on mobile, row on desktop */}
+        {/* UPDATED COPYRIGHT LINE */}
         <div className="text-center text-slate-600 text-xs uppercase tracking-widest flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2">
            <span>&copy; {new Date().getFullYear()} YourBudget.</span>
            <span>
@@ -326,6 +326,7 @@ function App() {
            </span>
         </div>
       </footer>
+    </div> 
   );
 }
 
