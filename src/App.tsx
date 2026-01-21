@@ -27,7 +27,8 @@ function App() {
     let zeroDateFound = false;
     let monthsUntilZero = Infinity;
 
-    for (let i = 0; i <= 24; i++) {
+    // UPGRADE: Changed loop from 24 to 36 months (3 Years)
+    for (let i = 0; i <= 36; i++) {
       const d = new Date();
       d.setMonth(d.getMonth() + i);
       // UK Date Format for Chart Labels
@@ -81,7 +82,8 @@ function App() {
   }, [cash, revenue, expenses, growthRate, growthStartMonth, newHireCost, hireStartMonth, showScenarios]);
 
   const getAdvice = () => {
-    if (isProfitable) return {
+    // If Profitable (Revenue >= Expenses at start OR calculates as profitable)
+    if (revenue >= expenses) return {
       borderColor: "border-finance-green/30",
       bgGradient: "from-finance-green/10 to-transparent",
       iconColor: "text-finance-green",
@@ -123,9 +125,7 @@ function App() {
       {/* Header */}
       <header className="max-w-5xl w-full flex justify-between items-end mb-10 border-b border-white/10 pb-6">
         <div>
-          {/* British English: Visualiser */}
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-2">Runway<span className="text-finance-blue">.Visualiser</span></h1>
-          {/* British English: Modelling */}
           <p className="text-slate-400">Privacy-first cash flow modelling. No bank connections.</p>
         </div>
         <div className="hidden md:block text-right">
@@ -191,7 +191,7 @@ function App() {
                             <input type="number" value={growthRate} onChange={(e) => setGrowthRate(Number(e.target.value))} className={`w-full bg-slate-950 border rounded-lg py-2 pl-4 pr-8 text-white focus:outline-none transition-colors font-mono ${growthRate > 5 ? 'border-yellow-500 focus:border-yellow-500' : 'border-slate-800 focus:border-finance-blue'}`} />
                             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">%</span>
                         </div>
-                        <input type="number" min="1" max="24" value={growthStartMonth} onChange={(e) => setGrowthStartMonth(Number(e.target.value))} className="w-16 bg-slate-950 border border-slate-800 rounded-lg py-2 text-center text-white focus:outline-none focus:border-finance-blue font-mono" />
+                        <input type="number" min="1" max="36" value={growthStartMonth} onChange={(e) => setGrowthStartMonth(Number(e.target.value))} className="w-16 bg-slate-950 border border-slate-800 rounded-lg py-2 text-center text-white focus:outline-none focus:border-finance-blue font-mono" />
                     </div>
                     {growthRate > 5 && (
                        <div className="mt-2 flex gap-2 text-[10px] text-yellow-500 bg-yellow-500/10 p-2 rounded-lg border border-yellow-500/20">
@@ -209,7 +209,7 @@ function App() {
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
                             <input type="number" value={newHireCost} onChange={(e) => setNewHireCost(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 pl-6 pr-4 text-white focus:outline-none focus:border-finance-blue transition-colors font-mono" />
                         </div>
-                        <input type="number" min="1" max="24" value={hireStartMonth} onChange={(e) => setHireStartMonth(Number(e.target.value))} className="w-16 bg-slate-950 border border-slate-800 rounded-lg py-2 text-center text-white focus:outline-none focus:border-finance-blue font-mono" />
+                        <input type="number" min="1" max="36" value={hireStartMonth} onChange={(e) => setHireStartMonth(Number(e.target.value))} className="w-16 bg-slate-950 border border-slate-800 rounded-lg py-2 text-center text-white focus:outline-none focus:border-finance-blue font-mono" />
                     </div>
                   </div>
                </div>
@@ -221,14 +221,37 @@ function App() {
         <div className="lg:col-span-8 space-y-6">
           <div className="bg-finance-card p-8 rounded-2xl border border-white/5 relative overflow-hidden">
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-              <div>
+              <div className="space-y-1">
                  <div className="text-sm text-slate-400 mb-1 flex items-center gap-2"><Calendar className="w-4 h-4" /> Zero Cash Date</div>
-                 <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">{deathDate}</div>
+                 
+                 {/* --- SMARTER LOGIC STARTS HERE --- */}
+                 {revenue >= expenses ? (
+                    // CASE 1: Profitable
+                    <>
+                       <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">Indefinite</div>
+                       <div className="text-finance-green font-medium mt-2 flex items-center gap-2 text-sm">
+                         <TrendingUp className="w-4 h-4" /> Profitable & Growing
+                       </div>
+                    </>
+                 ) : runwayMonths > 36 ? (
+                    // CASE 2: Burning but Long Runway
+                    <>
+                       <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">3+ Years</div>
+                       <div className="text-slate-400 font-medium mt-2 text-sm">
+                         (Runway exceeds chart limits)
+                       </div>
+                    </>
+                 ) : (
+                    // CASE 3: Standard Date
+                    <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">{deathDate}</div>
+                 )}
+                 {/* --- SMARTER LOGIC ENDS HERE --- */}
+                 
               </div>
               <div className="text-right">
                 <div className="text-sm text-slate-400 mb-1">Runway</div>
                 <div className={`text-4xl font-mono font-bold ${runwayMonths < 6 && runwayMonths !== Infinity ? 'text-finance-red' : 'text-white'}`}>
-                  {runwayMonths === Infinity ? '∞' : runwayMonths.toFixed(1)} <span className="text-lg text-slate-500 font-sans font-normal">Months</span>
+                  {runwayMonths === Infinity || runwayMonths > 36 ? '∞' : runwayMonths.toFixed(1)} <span className="text-lg text-slate-500 font-sans font-normal">Months</span>
                 </div>
               </div>
             </div>
