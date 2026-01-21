@@ -301,63 +301,68 @@ function App() {
         </div>
       </main>
 
-      {/* SEO & FAQ SECTION */}
-<section className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-  <div className="text-center space-y-2 mb-8">
-    <h2 className="text-xl md:text-2xl font-black text-slate-200">Startup Finance 101</h2>
-    <p className="text-slate-400 text-sm">Understanding your runway shouldn't be complicated.</p>
-  </div>
-  
-  <div className="space-y-3">
-    {/* Q1: Security (TRUST) */}
-    <details className="group bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden w-full transition-all duration-200 open:bg-slate-800">
-      <summary className="flex items-center justify-between p-4 cursor-pointer list-none outline-none focus:outline-none text-slate-200 font-bold hover:text-blue-400 transition-colors">
-        <span>Is my financial data safe?</span>
-        <span className="transform group-open:rotate-180 transition-transform text-slate-500">▼</span>
-      </summary>
-      <div className="px-4 pb-4 text-slate-400 leading-relaxed text-sm border-t border-slate-700/50 pt-3 mt-1">
-        <strong>Yes. YourBudget is "Local-First".</strong> We do not have a database. The numbers you type live only in your browser's local memory (Local Storage). We cannot see, store, or share your data even if we wanted to. If you clear your cache, your data is gone forever.
-      </div>
-    </details>
+      {/* FAQ SECTION - Now contained in a card */}
+      <section className="max-w-6xl mx-auto mb-16"> {/* Matches width of top section */}
+        <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 md:p-10 shadow-xl">
+          
+          <div className="text-center space-y-3 mb-10">
+            <h2 className="text-2xl font-bold text-white">Frequently Asked Questions</h2>
+            <p className="text-slate-400">Everything you need to know about your data privacy and our calculations.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left Column */}
+            <div className="space-y-4">
+              <details className="group bg-slate-900/50 rounded-lg border border-slate-700/50 overflow-hidden transition-all duration-200 open:bg-slate-900 open:border-blue-500/30">
+                <summary className="flex items-center justify-between p-4 cursor-pointer list-none outline-none text-slate-200 font-bold hover:text-blue-400 transition-colors">
+                  <span>Is my financial data safe?</span>
+                  <span className="transform group-open:rotate-180 transition-transform text-slate-500">▼</span>
+                </summary>
+                <div className="px-4 pb-4 text-slate-400 leading-relaxed text-sm border-t border-slate-700/50 pt-3 mt-1">
+                  <strong>Yes. YourBudget is "Local-First".</strong> We do not have a database. The numbers you type live only in your browser's local memory. We cannot see, store, or share your data even if we wanted to.
+                </div>
+              </details>
 
-    {/* Q2: Zero Cash Date (SEO) */}
-    <details className="group bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden w-full transition-all duration-200 open:bg-slate-800">
-      <summary className="flex items-center justify-between p-4 cursor-pointer list-none outline-none focus:outline-none text-slate-200 font-bold hover:text-blue-400 transition-colors">
-        <span>What is a "Zero Cash Date"?</span>
-        <span className="transform group-open:rotate-180 transition-transform text-slate-500">▼</span>
-      </summary>
-      <div className="px-4 pb-4 text-slate-400 leading-relaxed text-sm border-t border-slate-700/50 pt-3 mt-1">
-        Your Zero Cash Date is the estimated calendar day your startup will run out of money based on your current Burn Rate. This is often called your "Cash Out Date." Investors typically expect you to start fundraising 6-9 months before this date hits.
-      </div>
-    </details>
+              <details className="group bg-slate-900/50 rounded-lg border border-slate-700/50 overflow-hidden transition-all duration-200 open:bg-slate-900 open:border-blue-500/30">
+                <summary className="flex items-center justify-between p-4 cursor-pointer list-none outline-none text-slate-200 font-bold hover:text-blue-400 transition-colors">
+                  <span>What is a "Zero Cash Date"?</span>
+                  <span className="transform group-open:rotate-180 transition-transform text-slate-500">▼</span>
+                </summary>
+                <div className="px-4 pb-4 text-slate-400 leading-relaxed text-sm border-t border-slate-700/50 pt-3 mt-1">
+                  Your Zero Cash Date is the estimated day your startup will run out of money based on your current Burn Rate. Investors typically expect you to start fundraising 6-9 months before this date.
+                </div>
+              </details>
+            </div>
 
-    {/* Q3: Burn Rate Calculation (SEO) */}
-    <details className="group bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden w-full transition-all duration-200 open:bg-slate-800">
-      <summary className="flex items-center justify-between p-4 cursor-pointer list-none outline-none focus:outline-none text-slate-200 font-bold hover:text-blue-400 transition-colors">
-        <span>How do I calculate Net Burn Rate?</span>
-        <span className="transform group-open:rotate-180 transition-transform text-slate-500">▼</span>
-      </summary>
-      <div className="px-4 pb-4 text-slate-400 leading-relaxed text-sm border-t border-slate-700/50 pt-3 mt-1">
-        Net Burn Rate is the amount of money you are losing each month. The simple formula is:
-        <div className="font-mono bg-slate-900/50 p-2 rounded mt-2 mb-2 text-blue-300">
-           (Cash Balance Start of Month) - (Cash Balance End of Month)
+            {/* Right Column */}
+            <div className="space-y-4">
+              <details className="group bg-slate-900/50 rounded-lg border border-slate-700/50 overflow-hidden transition-all duration-200 open:bg-slate-900 open:border-blue-500/30">
+                <summary className="flex items-center justify-between p-4 cursor-pointer list-none outline-none text-slate-200 font-bold hover:text-blue-400 transition-colors">
+                  <span>How do I calculate Net Burn Rate?</span>
+                  <span className="transform group-open:rotate-180 transition-transform text-slate-500">▼</span>
+                </summary>
+                <div className="px-4 pb-4 text-slate-400 leading-relaxed text-sm border-t border-slate-700/50 pt-3 mt-1">
+                  Net Burn Rate is the cash you lose each month. <br/>
+                  <code className="text-xs bg-black/30 p-1 rounded text-blue-300 block mt-2 w-max">
+                    (Start Cash) - (End Cash)
+                  </code>
+                </div>
+              </details>
+
+              <details className="group bg-slate-900/50 rounded-lg border border-slate-700/50 overflow-hidden transition-all duration-200 open:bg-slate-900 open:border-blue-500/30">
+                <summary className="flex items-center justify-between p-4 cursor-pointer list-none outline-none text-slate-200 font-bold hover:text-blue-400 transition-colors">
+                  <span>How much runway should I have?</span>
+                  <span className="transform group-open:rotate-180 transition-transform text-slate-500">▼</span>
+                </summary>
+                <div className="px-4 pb-4 text-slate-400 leading-relaxed text-sm border-t border-slate-700/50 pt-3 mt-1">
+                  Standard advice is <strong>18 to 24 months</strong> after a fresh funding round. If you drop below 6 months of runway, you are in the "Danger Zone".
+                </div>
+              </details>
+            </div>
+
+          </div>
         </div>
-        It captures all expenses minus any incoming revenue.
-      </div>
-    </details>
-
-    {/* Q4: Runway Length (STRATEGY) */}
-    <details className="group bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden w-full transition-all duration-200 open:bg-slate-800">
-      <summary className="flex items-center justify-between p-4 cursor-pointer list-none outline-none focus:outline-none text-slate-200 font-bold hover:text-blue-400 transition-colors">
-        <span>How much runway should a startup have?</span>
-        <span className="transform group-open:rotate-180 transition-transform text-slate-500">▼</span>
-      </summary>
-      <div className="px-4 pb-4 text-slate-400 leading-relaxed text-sm border-t border-slate-700/50 pt-3 mt-1">
-        Standard advice is <strong>18 to 24 months</strong> after a fresh funding round. If you drop below 6 months of runway, you are in the "Danger Zone" where fundraising becomes difficult because investors sense desperation.
-      </div>
-    </details>
-  </div>
-</section>
+      </section>
 
     {/* FOOTER & SEO CONTENT (Trust Signals) */}
       <footer className="border-t border-white/5 bg-slate-900/50 py-12">
