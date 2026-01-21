@@ -80,13 +80,13 @@ function App() {
       runwayMonths: zeroDateFound ? monthsUntilZero : Infinity, 
       deathDate: deathDateStr, 
       isProfitable: !zeroDateFound,
-      endsProfitable, // <--- New Metric
+      endsProfitable, 
       chartData: data
     };
   }, [cash, revenue, expenses, growthRate, growthStartMonth, newHireCost, hireStartMonth, showScenarios]);
 
   const getAdvice = () => {
-    // If Profitable (Revenue >= Expenses at start OR calculates as profitable)
+    // 1. Profitable Today
     if (revenue >= expenses) return {
       borderColor: "border-finance-green/30",
       bgGradient: "from-finance-green/10 to-transparent",
@@ -95,6 +95,18 @@ function App() {
       text: "You are generating surplus capital. The question now shifts from 'survival' to 'strategy'. Are you deploying these funds efficiently?",
       cta: "Optimise Capital Allocation"
     };
+
+    // 2. J-Curve (Burning today, but recovered later) - NEW LOGIC
+    if (runwayMonths === Infinity && endsProfitable) return {
+      borderColor: "border-finance-blue/30",
+      bgGradient: "from-finance-blue/10 to-transparent",
+      iconColor: "text-finance-blue",
+      title: "Projected Recovery 🌤️",
+      text: "You are burning cash today, but your forecast indicates you will reach profitability before running out of money. This is the classic 'J-Curve'. Your main risk now is execution.",
+      cta: "Track Actuals vs Forecast"
+    };
+
+    // 3. Healthy Runway (Burning forever, but slowly)
     if (runwayMonths > 12) return {
       borderColor: "border-finance-blue/30",
       bgGradient: "from-finance-blue/10 to-transparent",
@@ -103,6 +115,8 @@ function App() {
       text: "You have time to correct course, but don't get complacent. Use this buffer to test new revenue channels without the pressure of a crisis.",
       cta: "Review Strategic Options"
     };
+
+    // 4. Caution
     if (runwayMonths > 5) return {
       borderColor: "border-yellow-500/30",
       bgGradient: "from-yellow-500/10 to-transparent",
@@ -111,6 +125,8 @@ function App() {
       text: "You have less than a year. If revenue doesn't pick up soon, you will need to make difficult cuts. Now is the time to plan, not hope.",
       cta: "Get a Cash Flow Audit"
     };
+
+    // 5. Critical
     return {
       borderColor: "border-finance-red/30",
       bgGradient: "from-finance-red/10 to-transparent",
