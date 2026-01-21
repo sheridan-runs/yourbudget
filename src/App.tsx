@@ -19,7 +19,7 @@ function App() {
   const [viewMode, setViewMode] = useState<'chart' | 'table'>('chart');
 
   // --- The Logic Engine ---
-  const { runwayMonths, deathDate, isProfitable, chartData } = useMemo(() => {
+  const { runwayMonths, deathDate, isProfitable, endsProfitable, chartData } = useMemo(() => {
     let currentBalance = cash;
     let currentRevenue = revenue;
     
@@ -73,10 +73,14 @@ function App() {
     // UK Date Format for "Death Date"
     const deathDateStr = !zeroDateFound ? "Indefinite Runway" : deathDateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
+    // CHECK FOR J-CURVE: Does the simulation end with a profit?
+    const endsProfitable = data[data.length - 1].net >= 0;
+
     return { 
       runwayMonths: zeroDateFound ? monthsUntilZero : Infinity, 
       deathDate: deathDateStr, 
       isProfitable: !zeroDateFound,
+      endsProfitable, // <--- New Metric
       chartData: data
     };
   }, [cash, revenue, expenses, growthRate, growthStartMonth, newHireCost, hireStartMonth, showScenarios]);
@@ -224,17 +228,25 @@ function App() {
               <div className="space-y-1">
                  <div className="text-sm text-slate-400 mb-1 flex items-center gap-2"><Calendar className="w-4 h-4" /> Zero Cash Date</div>
                  
-                 {/* --- SMARTER LOGIC STARTS HERE --- */}
+                 {/* --- LOGIC LEVEL 1: Title & Status --- */}
                  {revenue >= expenses ? (
-                    // CASE 1: Profitable
+                    // CASE 1: Profitable NOW
                     <>
                        <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">Indefinite</div>
                        <div className="text-finance-green font-medium mt-2 flex items-center gap-2 text-sm">
                          <TrendingUp className="w-4 h-4" /> Profitable & Growing
                        </div>
                     </>
+                 ) : (runwayMonths === Infinity && endsProfitable) ? (
+                    // CASE 2: The "J-Curve" (Turnaround)
+                    <>
+                       <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">Indefinite</div>
+                       <div className="text-finance-blue font-medium mt-2 flex items-center gap-2 text-sm">
+                         <Activity className="w-4 h-4" /> Projected Recovery
+                       </div>
+                    </>
                  ) : runwayMonths > 36 ? (
-                    // CASE 2: Burning but Long Runway
+                    // CASE 3: Slow Death (3+ Years)
                     <>
                        <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">3+ Years</div>
                        <div className="text-slate-400 font-medium mt-2 text-sm">
@@ -242,16 +254,23 @@ function App() {
                        </div>
                     </>
                  ) : (
-                    // CASE 3: Standard Date
+                    // CASE 4: Standard Burn
                     <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">{deathDate}</div>
                  )}
-                 {/* --- SMARTER LOGIC ENDS HERE --- */}
                  
               </div>
               <div className="text-right">
                 <div className="text-sm text-slate-400 mb-1">Runway</div>
+                
+                {/* --- LOGIC LEVEL 2: The Number Display --- */}
                 <div className={`text-4xl font-mono font-bold ${runwayMonths < 6 && runwayMonths !== Infinity ? 'text-finance-red' : 'text-white'}`}>
-                  {runwayMonths === Infinity || runwayMonths > 36 ? '∞' : runwayMonths.toFixed(1)} <span className="text-lg text-slate-500 font-sans font-normal">Months</span>
+                  
+                  {/* Logic: Show Infinity IF (Profitable OR J-Curve). Else show "36+" or Number */}
+                  {(revenue >= expenses || (runwayMonths === Infinity && endsProfitable)) 
+                    ? '∞' 
+                    : (runwayMonths > 36 ? '36+' : runwayMonths.toFixed(1))} 
+                  
+                  <span className="text-lg text-slate-500 font-sans font-normal"> Months</span>
                 </div>
               </div>
             </div>
