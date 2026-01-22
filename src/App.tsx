@@ -150,7 +150,15 @@ function App() {
         </div>
         <div className="hidden md:block text-right">
            <div className="text-xs uppercase tracking-widest text-slate-500 mb-1">Built by</div>
-           <a href="https://sheridanjamieson.com" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-finance-blue transition-colors">Sheridan Jamieson</a>
+           {/* UPDATED: Added 'me' to the rel attribute below */}
+           <a 
+             href="https://sheridanjamieson.com" 
+             target="_blank" 
+             rel="me noopener noreferrer" 
+             className="font-bold text-white hover:text-finance-blue transition-colors"
+           >
+             Sheridan Jamieson
+           </a>
         </div>
       </header>
 
