@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-site-verification" content="eaYeZr2fwapkK1nC8pT91oAmu3vaQ1FGsMMmg1SEkkE" />
     
+    <link rel="canonical" href="https://yourbudget.xyz/" />
+    
     <title>Runway.Visualiser | Privacy-First Cash Flow Modelling</title>
     <meta name="description" content="Calculate your business runway and burn rate instantly. Privacy-first cash flow modelling for startups and SMEs. No bank connections required." />
     <meta name="keywords" content="runway calculator, burn rate calculator, startup finance, cash flow modelling, small business finance" />
@@ -17,40 +19,61 @@
     <meta property="og:url" content="https://yourbudget.xyz/" />
 
     <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [{
-    "@type": "Question",
-    "name": "Is my data safe on YourBudget?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Yes. YourBudget is a local-first application. We do not use a database. All financial data is stored in your browser's Local Storage and never leaves your device."
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Is my data safe on YourBudget?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. YourBudget is a local-first application. We do not use a database. All financial data is stored in your browser's Local Storage and never leaves your device."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is Zero Cash Date?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Zero Cash Date is the projected calendar date when a company's cash balance will reach $0.00 based on current Net Burn Rate."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do you calculate Net Burn Rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Net Burn Rate = (Cash at Start of Month) - (Cash at End of Month). It represents the total cash decrease over a specific period."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How much runway does a startup need?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most investors recommend maintaining 18-24 months of runway after a funding round. Having less than 6 months of runway is considered critical risk."
+        }
+      }]
     }
-  }, {
-    "@type": "Question",
-    "name": "What is Zero Cash Date?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Zero Cash Date is the projected calendar date when a company's cash balance will reach $0.00 based on current Net Burn Rate."
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Runway.Visualiser",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Sheridan Jamieson",
+        "url": "https://www.sheridanjamieson.com"
+      },
+      "description": "Calculate your business runway and burn rate instantly. Privacy-first cash flow modelling for startups and SMEs."
     }
-  }, {
-    "@type": "Question",
-    "name": "How do you calculate Net Burn Rate?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Net Burn Rate = (Cash at Start of Month) - (Cash at End of Month). It represents the total cash decrease over a specific period."
-    }
-  }, {
-    "@type": "Question",
-    "name": "How much runway does a startup need?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Most investors recommend maintaining 18-24 months of runway after a funding round. Having less than 6 months of runway is considered critical risk."
-    }
-  }]
-}
-</script>
+    </script>
   </head>
   <body>
     <div id="root"></div>
