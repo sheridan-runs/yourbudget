@@ -6,7 +6,9 @@ function App() {
   // --- State: Core Financials ---
   const [cash, setCash] = useState<number>(50000);
   const [revenue, setRevenue] = useState<number>(5000);
-  const [expenses, setExpenses] = useState<number>(5000);
+  // NEW: Split expenses into Fixed and Variable
+  const [fixedExpenses, setFixedExpenses] = useState<number>(3000);
+  const [cogsPercentage, setCogsPercentage] = useState<number>(0); 
   
   // --- Scenario State ---
   const [showScenarios, setShowScenarios] = useState<boolean>(false);
@@ -42,7 +44,9 @@ function App() {
           currentRevenue = currentRevenue * (1 + (growthRate / 100));
       }
 
-      const currentTotalExpenses = expenses + (isActiveHire ? newHireCost : 0);
+      // NEW: Calculate dynamic COGS based on this month's revenue
+      const currentCogs = currentRevenue * (cogsPercentage / 100);
+      const currentTotalExpenses = fixedExpenses + currentCogs + (isActiveHire ? newHireCost : 0);
       const currentNet = currentRevenue - currentTotalExpenses;
 
       data.push({ 
@@ -83,11 +87,15 @@ function App() {
       endsProfitable, 
       chartData: data
     };
-  }, [cash, revenue, expenses, growthRate, growthStartMonth, newHireCost, hireStartMonth, showScenarios]);
+  // UPDATED: Added fixedExpenses and cogsPercentage to dependency array
+  }, [cash, revenue, fixedExpenses, cogsPercentage, growthRate, growthStartMonth, newHireCost, hireStartMonth, showScenarios]);
 
   const getAdvice = () => {
+    // NEW: Calculate true starting expenses for the advice logic
+    const initialTotalExpenses = fixedExpenses + (revenue * (cogsPercentage / 100));
+
     // 1. Profitable Today
-    if (revenue >= expenses) return {
+    if (revenue >= initialTotalExpenses) return {
       borderColor: "border-finance-green/30",
       bgGradient: "from-finance-green/10 to-transparent",
       iconColor: "text-finance-green",
@@ -96,7 +104,7 @@ function App() {
       cta: "Optimise Capital Allocation"
     };
 
-    // 2. J-Curve (Burning today, but recovered later) - NEW LOGIC
+    // 2. J-Curve (Burning today, but recovered later)
     if (runwayMonths === Infinity && endsProfitable) return {
       borderColor: "border-finance-blue/30",
       bgGradient: "from-finance-blue/10 to-transparent",
@@ -150,7 +158,6 @@ function App() {
         </div>
         <div className="hidden md:block text-right">
            <div className="text-xs uppercase tracking-widest text-slate-500 mb-1">Built by</div>
-           {/* UPDATED: Added 'me' to the rel attribute below */}
            <a 
              href="https://sheridanjamieson.com" 
              target="_blank" 
@@ -185,12 +192,29 @@ function App() {
                   <input type="number" value={revenue} onChange={(e) => setRevenue(Number(e.target.value))} className="w-full bg-slate-900 border border-slate-700 rounded-lg py-3 pl-8 pr-4 text-white focus:outline-none focus:border-finance-green transition-colors font-mono text-lg" />
                 </div>
               </div>
+
+              {/* NEW: Fixed Expenses Input */}
               <div className="group">
-                <label className="block text-xs text-slate-500 mb-1 group-focus-within:text-finance-red transition-colors">Monthly Expenses</label>
+                <label className="block text-xs text-slate-500 mb-1 group-focus-within:text-finance-red transition-colors">Fixed Monthly Expenses</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
-                  <input type="number" value={expenses} onChange={(e) => setExpenses(Number(e.target.value))} className="w-full bg-slate-900 border border-slate-700 rounded-lg py-3 pl-8 pr-4 text-white focus:outline-none focus:border-finance-red transition-colors font-mono text-lg" />
+                  <input type="number" value={fixedExpenses} onChange={(e) => setFixedExpenses(Number(e.target.value))} className="w-full bg-slate-900 border border-slate-700 rounded-lg py-3 pl-8 pr-4 text-white focus:outline-none focus:border-finance-red transition-colors font-mono text-lg" />
                 </div>
+              </div>
+
+              {/* NEW: Variable Costs / COGS % Input */}
+              <div className="group pt-2">
+                <label className="block text-xs text-slate-500 mb-1 group-focus-within:text-yellow-500 transition-colors">Variable Costs (COGS %)</label>
+                <div className="relative">
+                  <input type="number" value={cogsPercentage} onChange={(e) => setCogsPercentage(Number(e.target.value))} className="w-full bg-slate-900 border border-slate-700 rounded-lg py-3 pl-4 pr-8 text-white focus:outline-none focus:border-yellow-500 transition-colors font-mono text-lg" />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">%</span>
+                </div>
+                {/* Dynamic Helper Text */}
+                {cogsPercentage > 0 && (
+                  <p className="mt-2 text-xs text-finance-green font-medium animate-in fade-in">
+                    Leaves a {100 - cogsPercentage}% Gross Profit Margin
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -253,7 +277,7 @@ function App() {
                  <div className="text-sm text-slate-400 mb-1 flex items-center gap-2"><Calendar className="w-4 h-4" /> Zero Cash Date</div>
                  
                  {/* --- LOGIC LEVEL 1: Title & Status --- */}
-                 {revenue >= expenses ? (
+                 {revenue >= (fixedExpenses + (revenue * (cogsPercentage / 100))) ? (
                     // CASE 1: Profitable NOW
                     <>
                        <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">Indefinite</div>
@@ -290,7 +314,7 @@ function App() {
                 <div className={`text-4xl font-mono font-bold ${runwayMonths < 6 && runwayMonths !== Infinity ? 'text-finance-red' : 'text-white'}`}>
                   
                   {/* Logic: Show Infinity IF (Profitable OR J-Curve). Else show "36+" or Number */}
-                  {(revenue >= expenses || (runwayMonths === Infinity && endsProfitable)) 
+                  {(revenue >= (fixedExpenses + (revenue * (cogsPercentage / 100))) || (runwayMonths === Infinity && endsProfitable)) 
                     ? '∞' 
                     : (runwayMonths > 36 ? '36+' : runwayMonths.toFixed(1))} 
                   
@@ -386,14 +410,14 @@ function App() {
               </p>
             </div>
 
-            {/* Card 2: Net Burn */}
+            {/* NEW: Card 2: Net Burn (Updated for COGS) */}
             <div className="bg-slate-900/50 rounded-lg border border-slate-700/50 p-6 hover:border-blue-500/30 transition-colors">
               <h3 className="text-slate-200 font-bold mb-3">How do I calculate Net Burn Rate?</h3>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Net Burn Rate is the actual cash you lose each month. It captures all expenses minus any incoming revenue.
+                Net Burn Rate is the actual cash you lose each month. Our visualizer calculates this by taking your Monthly Revenue, subtracting your Variable Costs (COGS) to find your Gross Profit, and then subtracting your Fixed Expenses.
               </p>
               <code className="block mt-3 text-xs bg-black/30 p-2 rounded text-blue-300 font-mono text-center border border-white/5">
-                (Start Cash) - (End Cash)
+                (Revenue - Variable Costs) - Fixed Expenses
               </code>
             </div>
 
