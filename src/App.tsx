@@ -24,9 +24,6 @@ function App() {
   const { runwayMonths, deathDate, isProfitable, endsProfitable, chartData } = useMemo(() => {
     let currentBalance = cash;
     let currentRevenue = revenue;
-    // Add this right below the `}, [cash, revenue...])` of the useMemo hook
-  const initialTotalExpenses = fixedExpenses + (revenue * (cogsPercentage / 100));
-  const isProfitableToday = revenue >= initialTotalExpenses;
     
     const data = [];
     let zeroDateFound = false;
@@ -92,6 +89,10 @@ function App() {
     };
   // UPDATED: Added fixedExpenses and cogsPercentage to dependency array
   }, [cash, revenue, fixedExpenses, cogsPercentage, growthRate, growthStartMonth, newHireCost, hireStartMonth, showScenarios]);
+
+  // Add this right below the `}, [cash, revenue...])` of the useMemo hook
+  const initialTotalExpenses = fixedExpenses + (revenue * (cogsPercentage / 100));
+  const isProfitableToday = revenue >= initialTotalExpenses;
 
   const getAdvice = () => {
     // 1. Critical (Overrides everything if you run out of cash fast)
