@@ -24,6 +24,9 @@ function App() {
   const { runwayMonths, deathDate, isProfitable, endsProfitable, chartData } = useMemo(() => {
     let currentBalance = cash;
     let currentRevenue = revenue;
+    // Add this right below the `}, [cash, revenue...])` of the useMemo hook
+  const initialTotalExpenses = fixedExpenses + (revenue * (cogsPercentage / 100));
+  const isProfitableToday = revenue >= initialTotalExpenses;
     
     const data = [];
     let zeroDateFound = false;
@@ -91,41 +94,18 @@ function App() {
   }, [cash, revenue, fixedExpenses, cogsPercentage, growthRate, growthStartMonth, newHireCost, hireStartMonth, showScenarios]);
 
   const getAdvice = () => {
-    // NEW: Calculate true starting expenses for the advice logic
-    const initialTotalExpenses = fixedExpenses + (revenue * (cogsPercentage / 100));
-
-    // 1. Profitable Today
-    if (revenue >= initialTotalExpenses) return {
-      borderColor: "border-finance-green/30",
-      bgGradient: "from-finance-green/10 to-transparent",
-      iconColor: "text-finance-green",
-      title: "Profitable & Growing 🚀",
-      text: "You are generating surplus capital. The question now shifts from 'survival' to 'strategy'. Are you deploying these funds efficiently?",
-      cta: "Optimise Capital Allocation"
+    // 1. Critical (Overrides everything if you run out of cash fast)
+    if (runwayMonths <= 5) return {
+      borderColor: "border-finance-red/30",
+      bgGradient: "from-finance-red/10 to-transparent",
+      iconColor: "text-finance-red",
+      title: "Critical Action Required 🚨",
+      text: "Clarity beats anxiety. Your runway is dangerously short, but you have options. We need to structure a survival plan immediately.",
+      cta: "Get Strategic Guidance"
     };
 
-    // 2. J-Curve (Burning today, but recovered later)
-    if (runwayMonths === Infinity && endsProfitable) return {
-      borderColor: "border-finance-blue/30",
-      bgGradient: "from-finance-blue/10 to-transparent",
-      iconColor: "text-finance-blue",
-      title: "Projected Recovery 🌤️",
-      text: "You are burning cash today, but your forecast indicates you will reach profitability before running out of money. This is the classic 'J-Curve'. Your main risk now is execution.",
-      cta: "Track Actuals vs Forecast"
-    };
-
-    // 3. Healthy Runway (Burning forever, but slowly)
-    if (runwayMonths > 12) return {
-      borderColor: "border-finance-blue/30",
-      bgGradient: "from-finance-blue/10 to-transparent",
-      iconColor: "text-finance-blue",
-      title: "Healthy Runway 🛡️",
-      text: "You have time to correct course, but don't get complacent. Use this buffer to test new revenue channels without the pressure of a crisis.",
-      cta: "Review Strategic Options"
-    };
-
-    // 4. Caution
-    if (runwayMonths > 5) return {
+    // 2. Caution
+    if (runwayMonths <= 12) return {
       borderColor: "border-yellow-500/30",
       bgGradient: "from-yellow-500/10 to-transparent",
       iconColor: "text-yellow-500",
@@ -134,14 +114,34 @@ function App() {
       cta: "Get a Cash Flow Audit"
     };
 
-    // 5. Critical
+    // 3. Healthy Runway (Burning eventually hits zero)
+    if (runwayMonths !== Infinity) return {
+      borderColor: "border-finance-blue/30",
+      bgGradient: "from-finance-blue/10 to-transparent",
+      iconColor: "text-finance-blue",
+      title: "Healthy Runway 🛡️",
+      text: "You have time to correct course, but don't get complacent. Use this buffer to test new revenue channels without the pressure of a crisis.",
+      cta: "Review Strategic Options"
+    };
+
+    // 4. J-Curve (Runway is Infinity, but we started out burning cash)
+    if (!isProfitableToday && endsProfitable) return {
+      borderColor: "border-finance-blue/30",
+      bgGradient: "from-finance-blue/10 to-transparent",
+      iconColor: "text-finance-blue",
+      title: "Projected Recovery 🌤️",
+      text: "You are burning cash today, but your forecast indicates you will reach profitability before running out of money. This is the classic 'J-Curve'. Your main risk now is execution.",
+      cta: "Track Actuals vs Forecast"
+    };
+
+    // 5. Profitable Today (Runway is Infinity AND we are making money today)
     return {
-      borderColor: "border-finance-red/30",
-      bgGradient: "from-finance-red/10 to-transparent",
-      iconColor: "text-finance-red",
-      title: "Critical Action Required 🚨",
-      text: "Clarity beats anxiety. Your runway is dangerously short, but you have options. We need to structure a survival plan immediately.",
-      cta: "Get Strategic Guidance"
+      borderColor: "border-finance-green/30",
+      bgGradient: "from-finance-green/10 to-transparent",
+      iconColor: "text-finance-green",
+      title: "Profitable & Growing 🚀",
+      text: "You are generating surplus capital. The question now shifts from 'survival' to 'strategy'. Are you deploying these funds efficiently?",
+      cta: "Optimise Capital Allocation"
     };
   };
 
@@ -277,8 +277,8 @@ function App() {
                  <div className="text-sm text-slate-400 mb-1 flex items-center gap-2"><Calendar className="w-4 h-4" /> Zero Cash Date</div>
                  
                  {/* --- LOGIC LEVEL 1: Title & Status --- */}
-                 {revenue >= (fixedExpenses + (revenue * (cogsPercentage / 100))) ? (
-                    // CASE 1: Profitable NOW
+                 {isProfitableToday && runwayMonths === Infinity ? (
+                    // CASE 1: Profitable NOW & NEVER DIES
                     <>
                        <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">Indefinite</div>
                        <div className="text-finance-green font-medium mt-2 flex items-center gap-2 text-sm">
@@ -306,6 +306,19 @@ function App() {
                     <div className="text-3xl md:text-5xl font-bold text-white tracking-tight">{deathDate}</div>
                  )}
                  
+              </div>
+              <div className="text-right">
+                <div className="text-sm text-slate-400 mb-1">Runway</div>
+                
+                {/* --- LOGIC LEVEL 2: The Number Display --- */}
+                <div className={`text-4xl font-mono font-bold ${runwayMonths < 6 && runwayMonths !== Infinity ? 'text-finance-red' : 'text-white'}`}>
+                  
+                  {runwayMonths === Infinity 
+                    ? '∞' 
+                    : (runwayMonths > 36 ? '36+' : runwayMonths.toFixed(1))} 
+                  
+                  <span className="text-lg text-slate-500 font-sans font-normal"> Months</span>
+                </div>
               </div>
               <div className="text-right">
                 <div className="text-sm text-slate-400 mb-1">Runway</div>
