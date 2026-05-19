@@ -472,12 +472,10 @@ function App() {
             </div>
         </div>
         
-        {/* UPDATED COPYRIGHT LINE */}
         <div className="text-center text-slate-600 text-xs uppercase tracking-widest flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2">
-           <span>&copy; {new Date().getFullYear()} YourBudget.</span>
-           <span>
-             Strategic Finance by <a href="https://nurture.kiwi" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold">Nurture</a>.
-           </span>
+          <span>&copy; {new Date().getFullYear()} YourBudget.</span>
+          <span>A <a href="https://nurture.kiwi" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold">Nurture</a> Tool.</span>
+          <span>Sister site: <a href="https://owly.co.nz" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold">Owly.co.nz</a></span>
         </div>
       </footer>
     </div> 
